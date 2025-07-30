@@ -14,7 +14,7 @@ const CONFIG = {
       background: "#1a1a1a",
       completed: "#4CAF50",
       missed: "#FF5722",
-      missedOpacity: 0.3,
+      missedOpacity: 0.15,
       text: "#ffffff",
       caption: "#9e9e9e",
       streak: "#FFC107",
@@ -33,7 +33,7 @@ const CONFIG = {
   },
   features: {
     streakCounter: true,
-    monthlySummary: true,
+    monthlySummary: false,
     multipleHabits: true
   }
 };
@@ -75,7 +75,10 @@ class HabitUtils {
   }
   
   formatDate(date) {
-    return date.toISOString().slice(0, 10);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;   
   }
   
   addDays(date, days) {
@@ -112,36 +115,60 @@ class HabitUtils {
   }
   
   getMonthlySummary(history, year, month, habitName = null) {
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0);
-    
-    let completed = 0;
-    let total = 0;
-    
-    const getCompletionStatus = (dateStr) => {
-      if (habitName && history[dateStr] && typeof history[dateStr] === 'object') {
-        return history[dateStr][habitName] === true;
-      }
-      return history[dateStr] === true;
-    };
-    
-    for (let date = new Date(startDate); date <= endDate; date = this.addDays(date, 1)) {
-      if (date <= new Date()) {
-        total++;
-        const dateStr = this.formatDate(date);
-        if (getCompletionStatus(dateStr)) {
-          completed++;
-        }
-      }
-    }
-    
+  const today = new Date();
+  const isThisMonth = (today.getFullYear() === year && today.getMonth() === (month - 1));
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 0);
+  
+  // Get all log dates this month
+  const monthLogs = Object.keys(history)
+    .filter(dateStr => {
+      const date = new Date(dateStr);
+      return (
+        date.getFullYear() === year &&
+        date.getMonth() === (month - 1) &&
+        (!habitName || history[dateStr][habitName] !== undefined)
+      );
+    })
+    .sort();
+
+  if (monthLogs.length === 0) {
     return {
-      completed,
-      total,
-      percentage: total > 0 ? Math.round((completed / total) * 100) : 0,
+      completed: 0,
+      total: 0,
+      percentage: 0,
       month: startDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
     };
   }
+
+  const firstLogDate = new Date(monthLogs[0]);
+
+  let completed = 0;
+  let total = 0;
+
+  for (
+    let date = new Date(firstLogDate);
+    date <= today && date <= endDate;
+    date.setDate(date.getDate() + 1)
+  ) {
+    total++;
+    const dateStr = this.formatDate(date);
+    if (
+      (habitName && history[dateStr]?.[habitName] === true) ||
+      (!habitName && history[dateStr] === true)
+    ) {
+      completed++;
+    }
+  }
+
+  return {
+    completed,
+    total,
+    percentage: total > 0 ? Math.round((completed / total) * 100) : 0,
+    month: startDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  };
+  
+}
 }
 
 // Main widget class
