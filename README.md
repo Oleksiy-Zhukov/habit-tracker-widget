@@ -1,9 +1,9 @@
 # iOS Scriptable Habit Tracker Widget
 
 
-<img width="200" height="400" alt="IMG_8659" src="https://github.com/user-attachments/assets/293e0b0d-f443-46fe-9f74-e57e084500a1" />
-<img width="200" height="400" alt="IMG_8658" src="https://github.com/user-attachments/assets/d690bbe5-6c3c-4dd7-927d-9a4ea4d99616" />
-<img width="200" height="400" alt="IMG_8657" src="https://github.com/user-attachments/assets/de4a913e-5326-4087-aa1f-5291f4dab0f4" />
+<img width="250" height="600" alt="IMG_8659" src="https://github.com/user-attachments/assets/293e0b0d-f443-46fe-9f74-e57e084500a1" />
+<img width="250" height="600" alt="IMG_8658" src="https://github.com/user-attachments/assets/d690bbe5-6c3c-4dd7-927d-9a4ea4d99616" />
+<img width="250" height="600" alt="IMG_8657" src="https://github.com/user-attachments/assets/de4a913e-5326-4087-aa1f-5291f4dab0f4" />
 
 
 ## Overview
